@@ -1,14 +1,12 @@
-import argparse
-from evaluator import evaluate_omr
+import subprocess
+import sys
 
-def main():
-    parser = argparse.ArgumentParser(description="OMR Sheet Evaluator")
-    parser.add_argument("-i", "--image", required=True, help="Input OMR image")
-    parser.add_argument("-o", "--out", default="outputs", help="Output folder")
-    args = parser.parse_args()
+def run_all():
+    # Step 1: Highlight bubbles / prepare outputs
+    subprocess.run([sys.executable, "src/extract_multiple_answers.py"], check=True)
 
-    result_paths = evaluate_omr(args.image, args.out)
-    print("[DONE] Results saved:", result_paths)
+    # Step 2: Convert outputs to CSV
+    subprocess.run([sys.executable, "src/omr_to_csv.py"], check=True)
 
 if __name__ == "__main__":
-    main()
+    run_all()
